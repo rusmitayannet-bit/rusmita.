@@ -6,17 +6,70 @@ import { useState } from "react";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [mensaje, setMensaje] = useState({ tipo: "", texto: "" });
 
   const handleGoogleLogin = async () => {
     setLoading(true);
+    setMensaje({ tipo: "", texto: "" });
     const supabase = createClient();
     
-    await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
+
+    if (error) {
+      setMensaje({ tipo: "error", texto: error.message });
+      setLoading(false);
+    }
+  };
+
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setMensaje({ tipo: "", texto: "" });
+    const supabase = createClient();
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setMensaje({ tipo: "error", texto: "Credenciales incorrectas. Si no tienes cuenta, haz clic en Registrarse." });
+      setLoading(false);
+    } else {
+      window.location.href = "/";
+    }
+  };
+
+  const handleSignUp = async () => {
+    if (!email || !password) {
+      setMensaje({ tipo: "error", texto: "Ingresa un correo y contraseña" });
+      return;
+    }
+    setLoading(true);
+    setMensaje({ tipo: "", texto: "" });
+    const supabase = createClient();
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      }
+    });
+
+    if (error) {
+      setMensaje({ tipo: "error", texto: error.message });
+    } else {
+      setMensaje({ tipo: "exito", texto: "¡Cuenta creada! Revisa tu correo para verificar." });
+    }
+    setLoading(false);
   };
 
   return (
@@ -25,9 +78,58 @@ export default function LoginPage() {
         <h1 className="font-heading text-3xl font-bold text-foreground mb-2">
           ¡Bienvenido a Rusmita!
         </h1>
-        <p className="text-muted-foreground mb-8">
+        <p className="text-muted-foreground mb-6">
           Inicia sesión para guardar tus pedidos, ver ofertas exclusivas y comprar más rápido.
         </p>
+
+        {mensaje.texto && (
+          <div className={`p-3 mb-6 rounded-lg text-sm ${mensaje.tipo === 'error' ? 'bg-destructive/10 text-destructive' : 'bg-[#84C32E]/10 text-[#84C32E]'}`}>
+            {mensaje.texto}
+          </div>
+        )}
+
+        <form onSubmit={handleEmailLogin} className="space-y-4 mb-6">
+          <input 
+            type="email" 
+            placeholder="Correo electrónico" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full bg-secondary border border-border rounded-lg px-4 py-3 focus:border-primary outline-none text-foreground"
+            required
+          />
+          <input 
+            type="password" 
+            placeholder="Contraseña" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full bg-secondary border border-border rounded-lg px-4 py-3 focus:border-primary outline-none text-foreground"
+            required
+          />
+          
+          <div className="flex gap-4">
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 bg-primary text-primary-foreground font-bold py-3 rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50"
+            >
+              Iniciar Sesión
+            </button>
+            <button
+              type="button"
+              onClick={handleSignUp}
+              disabled={loading}
+              className="flex-1 bg-secondary text-foreground font-bold py-3 rounded-xl hover:bg-secondary/80 transition-colors disabled:opacity-50"
+            >
+              Registrarse
+            </button>
+          </div>
+        </form>
+
+        <div className="relative flex items-center gap-4 py-4 mb-2">
+          <div className="flex-1 h-px bg-border"></div>
+          <span className="text-sm text-muted-foreground">o</span>
+          <div className="flex-1 h-px bg-border"></div>
+        </div>
 
         <button
           onClick={handleGoogleLogin}
