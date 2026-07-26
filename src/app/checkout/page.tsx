@@ -38,14 +38,31 @@ export default function CheckoutPage() {
     }, 1500);
   };
 
-  const handlePagarTarjeta = () => {
+  const handlePagarTarjeta = async () => {
     setProcesando(true);
-    // Aquí iría la integración con Culqi
-    setTimeout(() => {
-      const codigo = "PED-" + Math.floor(Math.random() * 10000);
-      clearCart();
-      router.push(`/pedido/${codigo}?success=true`);
-    }, 2000);
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items,
+          formData,
+          totalFinal
+        })
+      });
+      const data = await response.json();
+      
+      if (data.init_point) {
+        clearCart();
+        window.location.href = data.init_point; // Redirigir a Mercado Pago
+      } else {
+        alert("Ocurrió un error al procesar el pago.");
+        setProcesando(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setProcesando(false);
+    }
   };
 
   if (!mounted) return null;
@@ -132,7 +149,7 @@ export default function CheckoutPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <button onClick={handlePagarTarjeta} disabled={procesando} className="flex flex-col items-center justify-center gap-2 p-4 border border-border rounded-lg hover:border-primary transition-colors disabled:opacity-50">
                 <CreditCard className="w-8 h-8 text-foreground" />
-                <span className="font-medium text-foreground">Tarjeta (Culqi)</span>
+                <span className="font-medium text-foreground">Tarjeta (Mercado Pago)</span>
               </button>
               <button onClick={handlePagarWhatsApp} disabled={procesando} className="flex flex-col items-center justify-center gap-2 p-4 border border-border rounded-lg hover:border-primary transition-colors disabled:opacity-50 relative overflow-hidden group">
                 <div className="absolute inset-0 bg-[#00A859]/10 translate-y-full group-hover:translate-y-0 transition-transform" />

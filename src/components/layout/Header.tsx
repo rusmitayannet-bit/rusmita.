@@ -6,15 +6,36 @@ import { Search, ShoppingCart, User, Menu, MapPin, ChevronDown, Heart } from "lu
 import { useCartStore } from "@/store/cart";
 import { useUIStore } from "@/store/ui";
 import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 export function Header() {
   const { items, setIsOpen } = useCartStore();
   const { setIsMegaMenuOpen } = useUIStore();
   const [mounted, setMounted] = useState(false);
+  const [user, setUser] = useState<SupabaseUser | null>(null);
 
   useEffect(() => {
     setMounted(true);
+    const supabase = createClient();
+    
+    // Obtener sesión actual
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Escuchar cambios de autenticación
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+  };
 
   const cartCount = items.reduce((acc, item) => acc + item.cantidad, 0);
   
@@ -82,12 +103,35 @@ export function Header() {
           </button>
           
           <div className="hidden lg:flex items-center gap-4">
-            <button className="flex flex-col items-start hover:text-primary transition-colors text-left group">
-              <span className="text-xs text-muted-foreground">Hola,</span>
-              <span className="text-sm font-bold text-foreground flex items-center gap-1 group-hover:text-primary">
-                Inicia sesión <ChevronDown className="w-4 h-4" />
-              </span>
-            </button>
+            {mounted && user ? (
+              <div className="flex items-center gap-2 group relative">
+                <img 
+                  src={user.user_metadata?.avatar_url || "https://placehold.co/100x100?text=User"} 
+                  alt="Avatar" 
+                  className="w-8 h-8 rounded-full border border-border"
+                />
+                <div className="flex flex-col items-start text-left cursor-pointer">
+                  <span className="text-xs text-muted-foreground line-clamp-1 w-20">Hola, {user.user_metadata?.full_name?.split(' ')[0] || "Usuario"}</span>
+                  <span className="text-sm font-bold text-foreground flex items-center gap-1 group-hover:text-primary transition-colors">
+                    Mi Cuenta <ChevronDown className="w-4 h-4" />
+                  </span>
+                </div>
+                {/* Menú desplegable */}
+                <div className="absolute top-full right-0 mt-2 w-48 bg-card border border-border rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 flex flex-col overflow-hidden">
+                  <Link href="/mis-pedidos" className="px-4 py-3 text-sm text-foreground hover:bg-secondary transition-colors">Mis Pedidos</Link>
+                  <button onClick={handleLogout} className="px-4 py-3 text-sm text-destructive hover:bg-destructive/10 text-left transition-colors border-t border-border">
+                    Cerrar Sesión
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <Link href="/login" className="flex flex-col items-start hover:text-primary transition-colors text-left group">
+                <span className="text-xs text-muted-foreground">Hola,</span>
+                <span className="text-sm font-bold text-foreground flex items-center gap-1 group-hover:text-primary">
+                  Inicia sesión <ChevronDown className="w-4 h-4" />
+                </span>
+              </Link>
+            )}
             <div className="w-px h-8 bg-border"></div>
             <button className="flex flex-col items-center hover:text-primary transition-colors">
               <span className="text-sm font-bold text-foreground">Mi cuenta</span>
