@@ -12,7 +12,36 @@ const CATEGORIAS = [
     nombre: "Oportunidades Únicas",
     badge: "SALE",
     subcategorias: [
-      { titulo: "Destacados", items: ["Liquidación", "Ofertas Flash", "Últimas unidades"] }
+      { titulo: "Destacados", items: ["Liquidación", "Ofertas Flash", "Últimas unidades", "Cyber Days", "Remate de Temporada"] }
+    ]
+  },
+  {
+    id: "tecnologia",
+    nombre: "Tecnología",
+    subcategorias: [
+      { titulo: "Celulares", items: ["Smartphones", "Baterías y Cables", "Fundas", "Smartwatches"] },
+      { titulo: "Cómputo", items: ["Laptops", "Tablets", "Impresoras", "Accesorios PC"] },
+      { titulo: "Audio", items: ["Audífonos", "Parlantes Bluetooth", "Equipos de Sonido"] },
+      { titulo: "Video", items: ["Televisores", "Proyectores", "Cámaras"] }
+    ]
+  },
+  {
+    id: "electrohogar",
+    nombre: "Electrohogar",
+    subcategorias: [
+      { titulo: "Refrigeración", items: ["Refrigeradoras", "Frigobares", "Congeladoras"] },
+      { titulo: "Lavado", items: ["Lavadoras", "Secadoras", "Lava Secas"] },
+      { titulo: "Electrodomésticos", items: ["Licuadoras", "Microondas", "Cafeteras", "Ollas Arroceras"] },
+      { titulo: "Climatización", items: ["Ventiladores", "Aire Acondicionado", "Estufas"] }
+    ]
+  },
+  {
+    id: "hogar",
+    nombre: "Hogar y Organización",
+    subcategorias: [
+      { titulo: "Menaje", items: ["Vasos", "Platos", "Cubiertos", "Ollas y Sartenes"] },
+      { titulo: "Organización", items: ["Cajas Plásticas", "Tapers", "Repisas", "Organizadores"] },
+      { titulo: "Ropa de Cama", items: ["Sábanas", "Edredones", "Frazadas", "Almohadas"] }
     ]
   },
   {
@@ -34,18 +63,42 @@ const CATEGORIAS = [
   },
   {
     id: "escolar",
-    nombre: "Campaña Escolar",
+    nombre: "Feria Escolar",
     subcategorias: [
-      { titulo: "Útiles", items: ["Cuadernos", "Lápices", "Colores", "Plumones"] },
+      { titulo: "Útiles", items: ["Cuadernos", "Lápices", "Colores", "Plumones", "Temperas"] },
       { titulo: "Mochilas", items: ["Con Ruedas", "De Espalda", "Loncheras", "Cartucheras"] }
     ]
   },
   {
-    id: "hogar",
-    nombre: "Hogar y Decoración",
+    id: "juguetes",
+    nombre: "Niños y Juguetes",
     subcategorias: [
-      { titulo: "Menaje", items: ["Vasos", "Platos", "Cubiertos"] },
-      { titulo: "Organización", items: ["Cajas Plásticas", "Tapers", "Repisas"] }
+      { titulo: "Juguetes", items: ["Juegos de Mesa", "Muñecas", "Carros a Control", "Lego"] },
+      { titulo: "Bebés", items: ["Coches", "Cunas", "Ropa de Bebé", "Pañales"] }
+    ]
+  },
+  {
+    id: "deportes",
+    nombre: "Deportes y Aire Libre",
+    subcategorias: [
+      { titulo: "Fitness", items: ["Mancuernas", "Máquinas de Ejercicio", "Mats de Yoga"] },
+      { titulo: "Camping", items: ["Carpas", "Bolsas de Dormir", "Termos"] }
+    ]
+  },
+  {
+    id: "belleza",
+    nombre: "Salud y Belleza",
+    subcategorias: [
+      { titulo: "Cuidado Personal", items: ["Shampoos", "Cremas", "Perfumes"] },
+      { titulo: "Maquillaje", items: ["Labiales", "Sombras", "Bases"] }
+    ]
+  },
+  {
+    id: "mascotas",
+    nombre: "Mascotas",
+    subcategorias: [
+      { titulo: "Perros", items: ["Comida", "Platos", "Camas", "Correas"] },
+      { titulo: "Gatos", items: ["Comida", "Arena", "Rascadores", "Juguetes"] }
     ]
   }
 ];
