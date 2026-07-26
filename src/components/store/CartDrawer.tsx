@@ -2,7 +2,7 @@
 
 import { useCartStore } from "@/store/cart";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Minus, Plus, Trash2, ArrowRight } from "lucide-react";
+import { X, Minus, Plus, Trash2, ArrowRight, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
