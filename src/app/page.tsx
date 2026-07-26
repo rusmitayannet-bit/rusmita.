@@ -2,9 +2,9 @@
 
 import { motion } from "motion/react";
 import { ProductCard } from "@/components/store/ProductCard";
-import Link from "next/link";
 import { ArrowRight, Zap } from "lucide-react";
 import { useState, useEffect } from "react";
+import { BannerCarousel } from "@/components/home/BannerCarousel";
 
 // Datos de prueba temporales
 const MOCK_PRODUCTS = [
@@ -32,24 +32,9 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-      {/* Hero */}
-      <section className="bg-secondary px-4 py-12 md:py-20 text-center relative overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="container mx-auto relative z-10"
-        >
-          <h1 className="font-heading text-4xl md:text-6xl font-bold text-foreground mb-4">
-            Celebra con <span className="text-primary">Rusmita</span>
-          </h1>
-          <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
-            Encuentra todo lo que necesitas para tus fiestas y campañas. ¡Donde tú sí importas!
-          </p>
-          <Link href="/categoria/novedades" className="inline-flex items-center justify-center bg-primary text-primary-foreground font-bold px-8 py-3 rounded-full hover:bg-primary/90 transition-transform active:scale-95">
-            Ver Novedades
-          </Link>
-        </motion.div>
+      {/* Hero Carousel */}
+      <section className="w-full">
+        <BannerCarousel />
       </section>
 
       {/* Ofertas Flash */}
